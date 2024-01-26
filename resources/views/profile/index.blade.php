@@ -51,6 +51,7 @@
                     </div>
                 </div>
 
+
                 <div class="card mb-4">
                     <div class="card-header bg-success text-white">
                         <h4 class="mb-0">Buyurtmalar tarixi</h4>
@@ -87,11 +88,19 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-2 ms-auto">
                 <div class="d-grid mb-2">
-                    <button class="btn btn-primary" type="button">Chiqish</button>
+                    <a href="{{route('user.logout')}}" class="btn btn-primary" type="button">Chiqish</a>
                 </div>
             </div>
+
+            <div class="col-lg-2 ms-auto">
+                <div class="d-grid mb-2">
+                    <a href="{{route('user.change-password')}}" class="btn btn-primary" type="button">Parolni o'zgartirish</a>
+                </div>
+            </div>
+
 
         </div>
     </div>

@@ -53,11 +53,21 @@
 
                                 <h3 class="product-title">{{ $product->name }}</h3>
                                 <strong class="product-price">${{ number_format($product->price, 2) }}</strong>
-
-                                <span class="icon-cross">
-                                <img src="{{ asset('/assets/images/cross.svg') }}" class="img-fluid" alt="Cross Icon">
-                                </span>
                             </a>
+
+                            <div class="d-flex justify-content-center align-items-center mt-3">
+                                <a class="add-to-cart-link" data-product-id="{{ $product->id }}">
+                                   <span class="icon-cross d-flex">
+                                             <i class="nav-icon fa-solid fa-cart-shopping fa-2x"></i>
+                                   </span>
+                                </a>
+                            </div>
+
+
+
+
+
+
                         </div>
                     @endforeach
                 </div>
@@ -73,6 +83,49 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            function updateCartItemCount() {
+                $.ajax({
+                    url: '{{ route("frontend.cart.item_count") }}',
+                    type: 'GET',
+                    success: function (response) {
+                        $('#cart-item-count').text(response.itemCount);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+            updateCartItemCount();
+
+            $('.add-to-cart-link').on('click', function (e) {
+                e.preventDefault();
+                const product = $(this).data('product-id');
+
+                $.ajax({
+                    url: `/frontend/cart/add/${product}`,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        quantity: 1
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        updateCartItemCount();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+
 
 @endsection
 

@@ -5,8 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Untree.co">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="shortcut icon" href="{{asset('/assets/images/favicon.png')}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <meta name="description" content="" />
     <meta name="keywords" content="bootstrap, bootstrap4" />
 
@@ -47,12 +52,28 @@
                 <li class="nav-item {{ request()->is('frontend/product/contact') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('frontend.product.contact') }}">Biz bilan bog'lanish</a>
                 </li>
+
+                @auth
+                    @if(auth()->user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('backend.home') }}">Site ni boshqarish</a>
+                        </li>
+                    @endif
+                @endauth
+
+
             </ul>
 
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                 <li><a class="nav-link" href="{{route('frontend.user.index')}}"><img src="{{asset('/assets/images/user.svg')}}"></a></li>
-                <li><a class="nav-link" href="{{route('frontend.cart.index')}}"><img src="{{asset('/assets/images/cart.svg')}}"></a></li>
+                <li>
+                    <a class="nav-link" href="{{ route('frontend.cart.index') }}">
+                        <img src="{{ asset('/assets/images/cart.svg') }}" alt="">
+                        <span id="cart-item-count">0</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -62,6 +83,12 @@
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-success">
+        {{ session('error') }}
     </div>
 @endif
 

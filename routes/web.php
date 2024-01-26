@@ -14,34 +14,54 @@ use App\Http\Controllers\Frontend\PostController as FrontendPost;
 use App\Http\Controllers\Frontend\ProductController as FrontendProduct;
 use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
+use App\Http\Controllers\User\LoginController;
+use App\Http\Controllers\User\RegisterController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::name('user.')->group(function () {
+    Route::view('/private', 'private')->middleware('auth')->name('private');
+
+             Route::get('/login', function () {
+                  if (Auth::check()) {
+             return redirect(route('user.private'));
+          }
+        return view('login');
+    })->name('login');
+
+
+    Route::post('/login',[LoginController::class, 'login']);
+
+
+    Route::get('/logout', function (){
+        Auth::logout();
+        return redirect()->route('frontend.home');
+    })->name('logout');
+
+
+    Route::get('/registration', function () {
+        if (Auth::check()) {
+            return redirect(route('user.private'));
+        }
+        return view('registration');
+    })->name('registration');
+
+
+
+    Route::post('/registration', [RegisterController::class, 'save']);
+
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
+
 
 //FRONTEND ROUTES
+Route::any('/', function (){
+    return redirect()->route('frontend.home');
+});
 
 Route::prefix('frontend')->namespace('App\Http\Controllers\Frontend')->group(function () {
     Route::get('/index', [FrontendIndex::class, 'index'])->name('frontend.home');
@@ -54,16 +74,25 @@ Route::prefix('frontend')->namespace('App\Http\Controllers\Frontend')->group(fun
     Route::get('/post/show/{post}', [FrontendPost::class, 'show'])->name('frontend.post.show');
 
 
-    Route::get('/cart/index', [FrontendCart::class, 'index'])->name('frontend.cart.index');
+    Route::middleware('auth')->group(function () {
+        Route::get('/user/index', [FrontendUser::class, 'index'])->name('frontend.user.index');
+        Route::get('/cart/index', [FrontendCart::class, 'index'])->name('frontend.cart.index');
+        Route::post('/cart/add/{product}', [FrontendCart::class, 'add'])->name('frontend.cart.add');
+        Route::get('/frontend/cart/item_count', [FrontendCart::class, 'itemCount'])->name('frontend.cart.item_count');
+        Route::post('/remove-from-cart/{productId}', [FrontendCart::class, 'removeFromCart']);
+        Route::get('/get-cart', [FrontendCart::class, 'getCartData']);
 
-    Route::get('/user/index', [FrontendUser::class, 'index'])->name('frontend.user.index');
 
+        Route::get('/user/change-password', [FrontendUser::class, 'showChangePasswordForm'])->name('user.change-password');
+        Route::post('/user/change-password', [FrontendUser::class, 'changePassword'])->name('user.change-password.post');
+
+    });
 });
 
 //FRONTEND ROUTES
 
 //BACKEND ROUTES
-Route::prefix('backend')->namespace('App\Http\Controllers\Backend')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('backend')->namespace('App\Http\Controllers\Backend')->group(function () {
     Route::get('/index', [BackendIndex::class, 'index'])->name('backend.home');
 
     Route::get('/user/index', [BackendUser::class, 'index'])->name('backend.user.index');
@@ -105,4 +134,4 @@ Route::prefix('backend')->namespace('App\Http\Controllers\Backend')->group(funct
     Route::get('/cart/index', [BackendCart::class, 'index'])->name('backend.cart.index');
 });
 // BACKEND ROUTES
-require __DIR__.'/auth.php';
+

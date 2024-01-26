@@ -2,6 +2,12 @@
 @section('content')
 
 
+    @php
+        $summa = 0;
+        $totalAmount = 0;
+    @endphp
+
+
     <!-- Start Hero Section -->
     <div class="hero">
         <div class="container">
@@ -19,72 +25,52 @@
     </div>
     <!-- End Hero Section -->
 
-
-
     <div class="untree_co-section before-footer-section">
         <div class="container">
             <div class="row mb-5">
                 <form class="col-md-12" method="post">
                     <div class="site-blocks-table">
-                        <table class="table">
+
+                        <div id="totalAmount"></div>
+                        <table class="table" id="cartTable">
                             <thead>
                             <tr>
-                                <th class="product-thumbnail">Image</th>
-                                <th class="product-name">Product</th>
-                                <th class="product-price">Price</th>
-                                <th class="product-quantity">Quantity</th>
-                                <th class="product-total">Total</th>
-                                <th class="product-remove">Remove</th>
+                                <th class="product-thumbnail">Mahsulot rasmi</th>
+                                <th class="product-name">Mahsulot nomi</th>
+                                <th class="product-price">Mahsulot narxi</th>
+                                <th class="product-quantity">Mahsulot miqdori</th>
+                                <th class="product-total">Umumiy summa</th>
+                                <th class="product-remove">Savatchadan o'chirish</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td class="product-thumbnail">
-                                    <img src="{{asset('/assets/images/product-1.png')}}" alt="Image" class="img-fluid">
-                                </td>
-                                <td class="product-name">
-                                    <h2 class="h5 text-black">Product 1</h2>
-                                </td>
-                                <td>$49.00</td>
-                                <td>
-                                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-black decrease" type="button">&minus;</button>
-                                        </div>
-                                        <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-black increase" type="button">&plus;</button>
-                                        </div>
-                                    </div>
+                            @foreach($products as $product)
+                                @php
+                                    $summa += $product['product']->price * $product['quantity'];
+                                @endphp
+                                <tr>
+                                    <td class="product-thumbnail">
+                                        <img src="{{ asset('/assets/images/product-1.png') }}" alt="Image" class="img-fluid">
+                                    </td>
+                                    <td class="product-name">
+                                        <h2 class="h5 text-black">{{ $product['product']->name }}</h2>
+                                    </td>
+                                    <td class="product-price">{{ $product['product']->price }}</td>
 
-                                </td>
-                                <td>$49.00</td>
-                                <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                            </tr>
+                                    <td class="product-quantity" data-quantity="{{ $product['quantity'] }}">{{ $product['quantity'] }}</td>
+                                    <td class="totalAmount">{{ $product['product']->price * $product['quantity'] }}</td>
 
-                            <tr>
-                                <td class="product-thumbnail">
-                                    <img src="{{asset('/assets/images/product-2.png')}}" alt="Image" class="img-fluid">
-                                </td>
-                                <td class="product-name">
-                                    <h2 class="h5 text-black">Product 2</h2>
-                                </td>
-                                <td>$49.00</td>
-                                <td>
-                                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-black decrease" type="button">&minus;</button>
-                                        </div>
-                                        <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-black increase" type="button">&plus;</button>
-                                        </div>
-                                    </div>
 
-                                </td>
-                                <td>$49.00</td>
-                                <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                            </tr>
+
+
+
+                                    <!-- ... -->
+                                    <td><a class="btn btn-black btn-sm remove-item" data-product-id="{{ $product['product']->id }}">X</a></td>
+
+                                    </td>
+                                    <!-- ... -->
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -95,10 +81,7 @@
                 <div class="col-md-6">
                     <div class="row mb-5">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <button class="btn btn-black btn-sm btn-block">Update Cart</button>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
+                            <a href="{{route('frontend.product.shop')}}" class="btn btn-black btn-sm btn-block">Haridni davom ettirish</a>
                         </div>
                     </div>
 
@@ -108,23 +91,12 @@
                         <div class="col-md-7">
                             <div class="row">
                                 <div class="col-md-12 text-right border-bottom mb-5">
-                                    <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <span class="text-black">Subtotal</span>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <strong class="text-black">$230.00</strong>
+                                    <h3 class="text-black h4 text-uppercase">Jami narxi</h3>
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6">
-                                    <span class="text-black">Total</span>
-                                </div>
                                 <div class="col-md-6 text-right">
-                                    <strong class="text-black">$230.00</strong>
+                                    <strong class="text-black">{{$summa}}</strong>
                                 </div>
                             </div>
 
@@ -139,6 +111,118 @@
             </div>
         </div>
     </div>
+
+
+{{--    js--}}
+
+    <script>
+{{--        ishlaydi--}}
+//         $(document).ready(function () {
+//             $('.remove-item').on('click', function (e) {
+//                 e.preventDefault();
+//                 var productId = $(this).data('product-id');
+//
+//                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
+//
+//                 $.ajax({
+//                     type: 'POST',
+//                     url: '/frontend/remove-from-cart/' + productId,
+//                     data: {
+//                         _token: csrfToken
+//                     },
+//                     success: function (response) {
+//                         if (response.success) {
+//                             var $removedRow = $(e.target).closest('tr');
+//                             if ($removedRow.siblings('tr').length > 0) {
+//                                 $removedRow.fadeOut(300, function() {
+//                                     $removedRow.remove();
+//                                     updateTotal();
+//                                 });
+//                             } else {
+//                                 updateTotal();
+//                             }
+//                         } else {
+//                             alert('Failed to remove item from cart. ' + response.message);
+//                         }
+//                     },
+//                     error: function () {
+//                         alert('So\'rov yuborishda muammo yuz berdi');
+//                     }
+//                 });
+//             });
+//
+//             function updateTotal() {
+//                 var totalAmount = 0;
+//                 $('#cartTable tbody tr').each(function() {
+//                     var quantity = parseInt($(this).find('.product-quantity').data('quantity'));
+//                     var price = parseFloat($(this).find('.product-price').data('price'));
+//                     var total = quantity * price;
+//                     $(this).find('.product-total').text(total.toFixed(2));
+//                     totalAmount += total;
+//                 });
+//
+//                 $('#totalAmount').text(totalAmount.toFixed(2));
+//             }
+//         });
+
+
+function updateCart() {
+    // Отправляем запрос на сервер для получения обновленных данных корзины
+    $.ajax({
+        type: 'GET',
+        url: '/frontend/get-cart',
+        success: function (data) {
+            // Обновляем содержимое корзины на странице с использованием полученных данных
+            $('#cartTable tbody').html(data.cartHtml);
+            $('#totalAmount').text(data.totalAmount.toFixed(2));
+
+            // Обновляем переменную $summa
+            $summa = data.totalAmount;
+        },
+        error: function () {
+            alert('Failed to fetch updated cart data.');
+        }
+    });
+}
+
+$(document).ready(function () {
+    $('.remove-item').on('click', function (e) {
+        e.preventDefault();
+        var productId = $(this).data('product-id');
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            type: 'POST',
+            url: '/frontend/remove-from-cart/' + productId,
+            data: {
+                _token: csrfToken
+            },
+            success: function (response) {
+                if (response.success) {
+                    var $removedRow = $(e.target).closest('tr');
+                    if ($removedRow.siblings('tr').length > 0) {
+                        $removedRow.fadeOut(300, function () {
+                            $removedRow.remove();
+                            updateCart(); // Используем функцию updateCart вместо updateTotal
+                        });
+                    } else {
+                        updateCart();
+                    }
+                } else {
+                    alert('Failed to remove item from cart. ' + response.message);
+                }
+            },
+            error: function () {
+                alert('So\'rov yuborishda muammo yuz berdi');
+            }
+        });
+    });
+});
+
+
+    </script>
+
 
 
 @endsection
