@@ -47,13 +47,13 @@
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item mr-2">
-                    <form action="#" method="get">
+                    <form action="{{route('frontend.home')}}" method="get">
                         <input type="submit" value="Furnico" class="btn btn-outline-primary">
                     </form>
                 </li>
 
                 <li class="nav-item">
-                    <form action="{{route('logout')}}" method="post">
+                    <form action="{{route('user.logout')}}" method="get">
                         @csrf
                         <input type="submit" value="Logout" class="btn btn-outline-primary">
                     </form>
