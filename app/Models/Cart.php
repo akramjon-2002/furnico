@@ -11,7 +11,7 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'status'];
+    protected $fillable = ['status', 'confirmed'];
 
     public function user(): BelongsTo
     {

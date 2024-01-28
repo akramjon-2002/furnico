@@ -62,27 +62,40 @@
                                 <thead class="bg-light">
                                 <tr>
                                     <th>Buyurtma raqami</th>
-                                    <th>Buyurtma malumotlari</th>
+                                    <th>Product nomi</th>
                                     <th>Holati</th>
                                     <th>Buyurtma qilingan kun</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if(isset($orders))
-                                    @foreach($orders as $order)
-                                        <tr>
-                                            <td>{{ $order->id }}</td>
-                                            <td>{{ $order->details }}</td>
-                                            <td>{{ $order->status }}</td>
-                                            <td>{{ $order->created_at }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
+                                @forelse($orders as $order)
                                     <tr>
-                                        <td colspan="4" class="text-center">Hozircha buyurtma yo'q</td>
+                                        <td>{{ $order->id }}</td>
+
+                                        <td>
+                                            @forelse($order->cartItems as $cartItem)
+                                                {{ $cartItem->product->name }}
+                                                <br>
+                                            @empty
+                                                -
+                                            @endforelse
+                                        </td>
+                                        <td>
+                                            @if($order->status == 1)
+                                                Faol
+                                            @else
+                                                Faol emas
+                                            @endif
+                                        </td>
+                                        <td>{{ $order->created_at }}</td>
                                     </tr>
-                                @endif
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center">Hozircha buyurtma yo'q</td>
+                                    </tr>
+                                @endforelse
                                 </tbody>
+
                             </table>
                         </div>
                     </div>

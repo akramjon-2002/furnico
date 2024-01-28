@@ -32,7 +32,6 @@ class RegisterController extends Controller
             $user->assignRole('user');
 
             Auth::login($user);
-
             return redirect()->route('frontend.home ');
         } catch (\Exception $e) {
             return redirect()->route('user.registration')->with('error', 'Foydalanuvchini saqlashda muammo yuz berdi:(');

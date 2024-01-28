@@ -43,10 +43,6 @@ class CartController extends Controller
         return view('cart.index', compact('products'));
     }
 
-// Удалить функцию getTotalQuantities, так как она больше не нужна
-
-
-
 
 
     public function add(Request $request, $productId)
@@ -72,18 +68,6 @@ class CartController extends Controller
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
-
-
-
-    public function itemCount()
-    {
-        $user = Auth::user();
-        $itemCount = $user->cart ? $user->cart->cartItems()->count() : 0;
-
-        return response()->json(['itemCount' => $itemCount]);
-    }
-
-
 
 
     //delete from cart
@@ -117,45 +101,6 @@ class CartController extends Controller
 
 
 
-    public function getCartData()
-    {
-        try {
-            $user = Auth::user();
-            $cart = $user->carts->first();
 
-            if (!$cart) {
 
-                return [];
-            }
-
-            $cartItems = $cart->cartItems();
-
-            $products = [];
-            $totalAmount = 0;
-
-            foreach ($cartItems as $cartItem) {
-                $product = $cartItem->product;
-                $quantity = $cartItem->quantity;
-                $price = $product->price;
-                $total = $quantity * $price;
-
-                $products[] = [
-                    'id' => $product->id,
-                    'price' => $price,
-                    'quantity' => $quantity,
-                    'total' => $total,
-                ];
-
-                $totalAmount += $total;
-            }
-
-            return [
-                'cartHtml' => $products,
-                'totalAmount' => $totalAmount,
-            ];
-        } catch (\Exception $e) {
-            Log::error($e);
-            return response()->json(['error' => 'Internal Server Error'], 500);
-        }
-    }
 }

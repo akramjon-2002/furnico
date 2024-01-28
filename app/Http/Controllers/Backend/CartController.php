@@ -12,7 +12,7 @@ class CartController extends Controller
     {
 
         $cart->update([
-            'status' => true,
+            'status' => false,
             'confirmed' => true,
         ]);
 
@@ -23,7 +23,8 @@ class CartController extends Controller
 
     public function index()
     {
-        $carts = Cart::all();
+        $carts = Cart::with('cartItems.product')->get();
         return view('admin.carts.index', compact('carts'));
     }
+
 }

@@ -13,7 +13,9 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('profile.index', compact('user'));
+        $orders = $user->carts()->with('cartItems.product')->get();
+        //dd($products);
+        return view('profile.index', compact('user', 'orders'));
     }
 
 

@@ -60,14 +60,9 @@
                 </li>
             </ul>
         </div>
-
-
-
     </nav>
     <!-- /.navbar -->
-
     @include('admin.includes.sidebar')
-
 
     @yield('content')
 

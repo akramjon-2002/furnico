@@ -33,13 +33,15 @@
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                             <p class=" mb-5">Iltimos email va parolingizni kiriting!</p>
 
-                            <div class="form-outline form-white mb-4">
+                                @error('email')
+                                <div class="text-danger mb-3">{{ $message }}</div>
+                                @enderror
+
+
+                                <div class="form-outline form-white mb-4">
                                 <input type="email" name="email" id="typeEmailX" class="form-control form-control-lg" />
                                 <label class="form-label" for="typeEmailX">Email</label>
                             </div>
-                            @error('email')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
 
                             <div class="form-outline form-white mb-4">
                                 <input type="password" name="password" id="typePasswordX" class="form-control form-control-lg" />

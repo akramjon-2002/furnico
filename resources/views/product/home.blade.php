@@ -55,11 +55,15 @@
 
                             <h3 class="product-title">{{ $product->name }}</h3>
                             <strong class="product-price">${{ number_format($product->price, 2) }}</strong>
-
-                            <span class="icon-cross">
-                    <img src="{{ asset('/assets/images/cross.svg') }}" class="img-fluid" alt="Cross Icon">
-                </span>
                         </a>
+
+                        <div class="d-flex justify-content-center align-items-center mt-3">
+                            <a class="add-to-cart-link" data-product-id="{{ $product->id }}">
+                                   <span class="icon-cross d-flex">
+                                             <i class="nav-icon fa-solid fa-cart-shopping fa-2x"></i>
+                                   </span>
+                            </a>
+                        </div>
                     </div>
                 @endforeach
 
@@ -319,4 +323,50 @@
         </div>
     </div>
     <!-- End Blog Section -->
+
+
+
+    <script>
+        $('.add-to-cart-link').on('click', function (e) {
+            e.preventDefault();
+            const product = $(this).data('product-id');
+
+            $.ajax({
+                url: `/frontend/cart/add/${product}`,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    quantity: 1
+                },
+                success: function (response) {
+                    console.log(response);
+                    showSuccessMessage();
+                },
+                error: function (error) {
+                    console.log(error);
+                    showErrorMessage();
+                }
+            });
+        });
+
+        function showSuccessMessage() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Mahsulot muvaffaqqiyatli savatchaga qo\'shildi',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+        function showErrorMessage() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка при добавлении товара в корзину',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+    </script>
 @endsection

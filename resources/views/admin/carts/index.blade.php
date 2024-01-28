@@ -1,11 +1,14 @@
 
-
 @extends('admin.layouts.main')
-
 @section('content')
-    <div class="container">
-        <h1>All Orders</h1>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
+    <div class="container mr-5">
+    <h1>All Orders</h1>
         <table class="table">
             <thead>
             <tr>
@@ -28,7 +31,7 @@
                             @endforeach
                         </ul>
                     </td>
-                    <td>{{ $cart->status ? 'Delivered' : 'Pending' }}</td>
+                    <td>{{ $cart->confirmed ? 'Delivered' : 'Pending' }}</td>
                     <td>
                         @if (!$cart->confirmed)
                             <form action="{{ route('cart.confirm', $cart->id) }}" method="post">
@@ -43,5 +46,5 @@
             @endforeach
             </tbody>
         </table>
-    </div>
+</div>
 @endsection

@@ -84,46 +84,50 @@
         </div>
     </div>
 
+
+
     <script>
-        $(document).ready(function () {
-            function updateCartItemCount() {
-                $.ajax({
-                    url: '{{ route("frontend.cart.item_count") }}',
-                    type: 'GET',
-                    success: function (response) {
-                        $('#cart-item-count').text(response.itemCount);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            }
+        $('.add-to-cart-link').on('click', function (e) {
+            e.preventDefault();
+            const product = $(this).data('product-id');
 
-            updateCartItemCount();
-
-            $('.add-to-cart-link').on('click', function (e) {
-                e.preventDefault();
-                const product = $(this).data('product-id');
-
-                $.ajax({
-                    url: `/frontend/cart/add/${product}`,
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        quantity: 1
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        updateCartItemCount();
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
+            $.ajax({
+                url: `/frontend/cart/add/${product}`,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    quantity: 1
+                },
+                success: function (response) {
+                    console.log(response);
+                    showSuccessMessage();
+                },
+                error: function (error) {
+                    console.log(error);
+                    showErrorMessage();
+                }
             });
         });
+
+        function showSuccessMessage() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Mahsulot muvaffaqqiyatli savatchaga qo\'shildi',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+        function showErrorMessage() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка при добавлении товара в корзину',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
     </script>
 
 

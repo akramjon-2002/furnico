@@ -10,14 +10,20 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        if (Auth::check()){
+        if (Auth::check()) {
             return redirect()->intended();
         }
+
         $formData = $request->only('email', 'password');
+
         if (Auth::attempt($formData)) {
             return redirect()->intended('frontend.home');
         }
+
         return redirect()->route('user.login')
-            ->with('error', 'Shaxsiy profilga kirishda muammo yuz berdi:(');
+            ->with('error', 'Shaxsiy profilga kirishda muammo yuz berdi:(')
+            ->withInput($request->except('password'))
+            ->withErrors(['email' => 'Email yoki parol noto‘g‘ri']);
     }
+
 }

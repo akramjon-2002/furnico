@@ -22,11 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::name('user.')->group(function () {
-    Route::view('/private', 'private')->middleware('auth')->name('private');
 
              Route::get('/login', function () {
                   if (Auth::check()) {
-             return redirect(route('user.private'));
+             return redirect(route('frontend.home'));
           }
         return view('login');
     })->name('login');
@@ -43,7 +42,7 @@ Route::name('user.')->group(function () {
 
     Route::get('/registration', function () {
         if (Auth::check()) {
-            return redirect(route('user.private'));
+            return redirect()->intended('frontend.home');
         }
         return view('registration');
     })->name('registration');
@@ -78,7 +77,7 @@ Route::prefix('frontend')->namespace('App\Http\Controllers\Frontend')->group(fun
         Route::get('/user/index', [FrontendUser::class, 'index'])->name('frontend.user.index');
         Route::get('/cart/index', [FrontendCart::class, 'index'])->name('frontend.cart.index');
         Route::post('/cart/add/{product}', [FrontendCart::class, 'add'])->name('frontend.cart.add');
-        Route::get('/frontend/cart/item_count', [FrontendCart::class, 'itemCount'])->name('frontend.cart.item_count');
+        Route::get('/cart/item-count', [FrontendCart::class, 'itemCount'])->name('cart.item');
         Route::post('/remove-from-cart/{productId}', [FrontendCart::class, 'removeFromCart']);
         Route::get('/get-cart', [FrontendCart::class, 'getCartData']);
 
@@ -132,6 +131,7 @@ Route::middleware(['auth', 'admin'])->prefix('backend')->namespace('App\Http\Con
     Route::post('/review/store', [CompanyReviewController::class, 'store'])->name('backend.review.store');
 
     Route::get('/cart/index', [BackendCart::class, 'index'])->name('backend.cart.index');
+    Route::post('/cart/confirm', [BackendCart::class, 'confirm'])->name('cart.confirm');
 });
 // BACKEND ROUTES
 

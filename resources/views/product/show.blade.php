@@ -25,14 +25,17 @@
                         <li><strong>{{ $key }}:</strong> {{ $value }}</li>
                     @endforeach
                 </ul>
+                <a class="add-to-cart-link" data-product-id="{{ $product->id }}">
                 <p class="mt-3">
-                    <button class="btn btn-primary">Add to Cart</button>
+                    <button class="btn btn-primary">Savatchaga qo'shish</button>
                 </p>
+                </a>
             </div>
         </div>
     </div>
 
     <script>
+{{--        bir nechta rasmni korsatish--}}
         let currentImageIndex = 0;
         const totalImages = {{ count($product->photos) }};
         const productImageContainer = document.getElementById('productImageContainer');
@@ -60,5 +63,53 @@
             prevBtn.style.display = totalImages > 1 ? 'block' : 'none';
             nextBtn.style.display = totalImages > 1 ? 'block' : 'none';
         }
+{{--        bir nechta rasmni korsatish--}}
+
+
+
+            // kozinkaga qoshish
+            $('.add-to-cart-link').on('click', function (e) {
+            e.preventDefault();
+            const product = $(this).data('product-id');
+
+            $.ajax({
+            url: `/frontend/cart/add/${product}`,
+            type: 'POST',
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+            data: {
+            quantity: 1
+        },
+            success: function (response) {
+            console.log(response);
+            showSuccessMessage();
+        },
+            error: function (error) {
+            console.log(error);
+            showErrorMessage();
+        }
+        });
+        });
+
+            function showSuccessMessage() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Mahsulot muvaffaqqiyatli savatchaga qo\'shildi',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+            function showErrorMessage() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка при добавлении товара в корзину',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+        // kozinkaga qoshish
     </script>
 @endsection

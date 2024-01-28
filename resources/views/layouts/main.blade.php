@@ -20,7 +20,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="{{asset('/assets/css/tiny-slider.css')}}" rel="stylesheet">
     <link href="{{asset('/assets/css/style.css')}}" rel="stylesheet">
-    <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>FurniСo</title>
 </head>
 
 <body>
@@ -67,12 +68,16 @@
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                 <li><a class="nav-link" href="{{route('frontend.user.index')}}"><img src="{{asset('/assets/images/user.svg')}}"></a></li>
+
+
                 <li>
                     <a class="nav-link" href="{{ route('frontend.cart.index') }}">
                         <img src="{{ asset('/assets/images/cart.svg') }}" alt="">
-                        <span id="cart-item-count">0</span>
+                        <span id="cart-item-count"></span>
                     </a>
                 </li>
+
+
 
             </ul>
         </div>
@@ -93,6 +98,8 @@
 @endif
 
 @yield('content')
+
+
 
 
 
